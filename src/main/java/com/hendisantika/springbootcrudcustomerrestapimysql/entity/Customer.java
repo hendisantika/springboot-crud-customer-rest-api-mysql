@@ -28,13 +28,13 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String id;
+    private Long id;
 
     @Column(name = "name")
     @Size(min = 3, max = 50)
     private String name;
 
     @Column(name = "phone")
-    @Size(min = 13, max = 30)
+    @Size(min = 10, max = 30)
     private String phone;
 }
