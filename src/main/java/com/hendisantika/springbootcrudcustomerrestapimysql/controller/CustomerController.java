@@ -1,6 +1,7 @@
 package com.hendisantika.springbootcrudcustomerrestapimysql.controller;
 
 import com.hendisantika.springbootcrudcustomerrestapimysql.entity.Customer;
+import com.hendisantika.springbootcrudcustomerrestapimysql.exception.ResourceNotFoundException;
 import com.hendisantika.springbootcrudcustomerrestapimysql.repository.CustomerRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,12 @@ public class CustomerController {
     @GetMapping
     public Page<Customer> getAllData(Pageable pageable) {
         return customerRepository.findAll(pageable);
+    }
+
+    @GetMapping(value = "{customerId}")
+    public Customer findByCustomerId(@PathVariable Long customerId) {
+        return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer " +
+                "[customerId=" + customerId + "] can't be found"));
     }
 
 }
