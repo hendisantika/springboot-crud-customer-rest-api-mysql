@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -47,6 +49,16 @@ public class CustomerController {
     public Customer findByCustomerId(@PathVariable Long customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer " +
                 "[customerId=" + customerId + "] can't be found"));
+    }
+
+    @PutMapping(value = "{customerId}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long customerId, @RequestBody Customer newCustomer) {
+        return customerRepository.findById(customerId).map(customer -> {
+            customer.setName(newCustomer.getName());
+            customer.setPhone(newCustomer.getPhone());
+            customerRepository.save(customer);
+            return ResponseEntity.ok(customer);
+        }).orElseThrow(() -> new ResourceNotFoundException("Customer [customerId=" + customerId + "] can't be found"));
     }
 
 }
